@@ -91,7 +91,7 @@ export default function Header() {
       <StyledHeader>
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
           <Logo to="/">
-            <img alt="$MINE Vegas" src="/path/to/mine-logo.svg" />
+            <img alt="$MINE Vegas" src="/mine.png" />
           </Logo>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center', position: 'relative' }}>
