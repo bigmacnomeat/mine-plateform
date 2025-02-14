@@ -81,7 +81,7 @@ export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = [
     mint: new PublicKey('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'),
     name: 'MINE',
     symbol: 'MINE',
-    image: 'mine.img', 
+    image: 'mine.png', 
     baseWager: 1e6, // Set base wager as needed
     decimals: 6, // Set decimals as needed
     usdPrice: 0, // Set the initial USD price as needed
