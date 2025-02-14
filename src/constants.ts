@@ -95,9 +95,9 @@ export const TOS_HTML = `
   <p><b>3. Risk Acknowledgement:</b> Games involve risk; no guaranteed winnings.</p>
   <p><b>4. No Warranty:</b> Games provided "as is"; operate randomly.</p>
   <p><b>5. Limitation of Liability:</b> We're not liable for damages.</p>
-  <p><b>7. Fair Play:</b> Games are conducted fairly and transparently.</p>
-  <p><b>8. Data Privacy:</b> Your privacy is important to us.</p>
-  <p><b>9. Responsible Gaming:</b> Play responsibly; seek help if needed.</p>
+  <p><b>6. Fair Play:</b> Games are conducted fairly and transparently.</p>
+  <p><b>7. Data Privacy:</b> Your privacy is important to us.</p>
+  <p><b>8. Responsible Gaming:</b> Play responsibly; seek help if needed.</p>
 `
 
 /**
