@@ -2,38 +2,30 @@ import { PublicKey } from '@solana/web3.js'
 import { FAKE_TOKEN_MINT, PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
 
 // Platform configuration
-if (!import.meta.env.VITE_PLATFORM_CREATOR_ADDRESS) {
-  throw new Error('VITE_PLATFORM_CREATOR_ADDRESS is required in .env')
+const PLATFORM_CREATOR_ADDRESS_ENV = import.meta.env.VITE_PLATFORM_CREATOR_ADDRESS || process.env.VITE_PLATFORM_CREATOR_ADDRESS
+if (!PLATFORM_CREATOR_ADDRESS_ENV) {
+  console.error('Warning: VITE_PLATFORM_CREATOR_ADDRESS not found')
 }
 
-// Platform creator address
-export const PLATFORM_CREATOR_ADDRESS = new PublicKey(import.meta.env.VITE_PLATFORM_CREATOR_ADDRESS)
+// Platform creator address - default to a test address if not set
+export const PLATFORM_CREATOR_ADDRESS = new PublicKey(PLATFORM_CREATOR_ADDRESS_ENV || "11111111111111111111111111111111")
 
-// Platform fees
+// Platform fees with defaults
 export const PLATFORM_CREATOR_FEE = Number(import.meta.env.VITE_PLATFORM_CREATOR_FEE ?? 0.01)
 export const PLATFORM_JACKPOT_FEE = Number(import.meta.env.VITE_PLATFORM_JACKPOT_FEE ?? 0.001)
 export const PLATFORM_REFERRAL_FEE = Number(import.meta.env.VITE_PLATFORM_REFERRAL_FEE ?? 0.5)
 
 // Platform URLs
-if (!import.meta.env.VITE_PLATFORM_SHARABLE_URL) {
-  throw new Error('VITE_PLATFORM_SHARABLE_URL is required in .env')
-}
+const PLATFORM_SHARABLE_URL_ENV = import.meta.env.VITE_PLATFORM_SHARABLE_URL || process.env.VITE_PLATFORM_SHARABLE_URL
+export const PLATFORM_SHARABLE_URL = PLATFORM_SHARABLE_URL_ENV || "https://mine-plateform.vercel.app"
 
-export const PLATFORM_SHARABLE_URL = import.meta.env.VITE_PLATFORM_SHARABLE_URL
+// RPC endpoint - default to devnet
+const RPC_ENDPOINT_ENV = import.meta.env.VITE_RPC_ENDPOINT || process.env.VITE_RPC_ENDPOINT
+export const RPC_ENDPOINT = RPC_ENDPOINT_ENV || "https://api.devnet.solana.com"
 
-// RPC endpoint
-if (!import.meta.env.VITE_RPC_ENDPOINT) {
-  throw new Error('VITE_RPC_ENDPOINT is required in .env')
-}
-
-export const RPC_ENDPOINT = import.meta.env.VITE_RPC_ENDPOINT
-
-// Firebase
-if (!import.meta.env.VITE_FIREBASE_DATABASE_URL) {
-  throw new Error('VITE_FIREBASE_DATABASE_URL is required in .env')
-}
-
-export const FIREBASE_DATABASE_URL = import.meta.env.VITE_FIREBASE_DATABASE_URL
+// Firebase - make optional
+const FIREBASE_DATABASE_URL_ENV = import.meta.env.VITE_FIREBASE_DATABASE_URL || process.env.VITE_FIREBASE_DATABASE_URL
+export const FIREBASE_DATABASE_URL = FIREBASE_DATABASE_URL_ENV || ""
 
 /** If the user should be able to revoke an invite after they've accepted an invite */
 export const PLATFORM_ALLOW_REFERRER_REMOVAL = true
@@ -122,10 +114,4 @@ export const TERMS_OF_SERVICE = `
 `
 
 // The default token metadata fetcher
-export const TOKEN_METADATA_FETCHER = () => {
-  return {
-    fetchTokenMetadata: async () => {
-      return TOKEN_METADATA
-    }
-  }
-}
+export const TOKEN_METADATA_FETCHER = makeHeliusTokenFetcher()
