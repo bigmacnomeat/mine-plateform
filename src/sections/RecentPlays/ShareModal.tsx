@@ -1,79 +1,76 @@
 import { GambaTransaction } from 'gamba-core-v2'
-import { GambaUi, TokenValue, useTokenMeta } from 'gamba-react-ui-v2'
+import { GambaUi, TokenValue } from 'gamba-react-ui-v2'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { Flex } from '../../components'
-import { Modal } from '../../components/Modal'
-import { EXPLORER_URL, PLATFORM_SHARABLE_URL } from '../../constants'
 import { extractMetadata } from '../../utils'
+import { PLATFORM_SHARABLE_URL } from '../../constants'
+import { Modal } from '../../components/Modal'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
+import styled from 'styled-components'
 
-const Container = styled.div`
-  display: grid;
-  gap: 10px;
-  padding: 20px;
-  padding-bottom: 0;
-  width: 100%;
+const ShareContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+  text-align: center;
 `
 
-const Inner = styled.div`
-  overflow: hidden;
+const PayoutInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
-const Content = styled.div`
-  border-radius: 10px;
-  padding: 20px;
-  background: linear-gradient(156deg, #52527822, #12121700);
-`
+interface Props {
+  event: GambaTransaction<'GameSettled'>
+  onClose: () => void
+}
 
-export function ShareModal({ event, onClose }: {event: GambaTransaction<'GameSettled'>, onClose: () => void}) {
-  const navigate = useNavigate()
+export function ShareModal({ event, onClose }: Props) {
+  const md = useMediaQuery('md')
   const { game } = extractMetadata(event)
-  const gotoGame = () => {
-    navigate('/' + game?.id)
-    onClose()
-  }
-  const tokenMeta = useTokenMeta(event.data.tokenMint)
-  const ref = React.useRef<HTMLDivElement>(null!)
+  const multiplier = event.data.bet[event.data.resultIndex.toNumber()] / 10000
+  const wager = event.data.wager.toNumber()
+  const payout = multiplier * wager
+  const profit = payout - wager
 
-  const profit = event.data.payout.sub(event.data.wager).toNumber()
-  const percentChange = profit / event.data.wager.toNumber()
+  const shareText = React.useMemo(() => {
+    const verb = profit >= 0 ? 'won' : 'lost'
+    const amount = Math.abs(profit)
+    return `I just ${verb} ${amount} ${game?.meta.name || 'Mine Vegas'} \n\nPlay now at ${PLATFORM_SHARABLE_URL}`
+  }, [profit, game])
+
+  const share = async () => {
+    try {
+      await navigator.share({
+        title: 'Mine Vegas',
+        text: shareText,
+      })
+    } catch (err) {
+      console.error(err)
+      try {
+        await navigator.clipboard.writeText(shareText)
+        alert('Copied to clipboard!')
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  }
 
   return (
-    <Modal onClose={() => onClose()}>
-      <Container>
-        <Inner>
-          <Content ref={ref}>
-            <div style={{ display: 'grid', gap: '5px', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', padding: '10px' }}>
-              <img src={tokenMeta.image} style={{ borderRadius: '50%', height: '40px' }} />
-              <div style={{ fontSize: '24px', color: percentChange >= 0 ? '#9bffad' : '#ff4f4f', padding: '10px' }}>
-                <b>
-                  {profit >= 0 ? '+' : '-'}
-                  <TokenValue exact amount={Math.abs(profit)} mint={event.data.tokenMint} />
-                </b>
-                <div style={{ fontSize: '18px' }}>
-                  {(event.data.multiplierBps / 10_000).toLocaleString()}x
-                </div>
-              </div>
-              <div style={{ padding: '10px', textAlign: 'center' }}>
-                <img src={game?.meta?.image} width="100px" />
-              </div>
-            </div>
-            <div style={{ background: '#121217CC', color: '#ffffffcc', fontStyle: 'italic', display: 'flex', alignContent: 'center', gap: '10px', padding: '10px', borderRadius: '10px' }}>
-              <img src="/gamba.svg" height="25px" />
-              <div>play on <b>{PLATFORM_SHARABLE_URL}</b></div>
-            </div>
-          </Content>
-        </Inner>
-        <Flex>
-          <GambaUi.Button size="small" onClick={() => window.open(`${EXPLORER_URL}/tx/${event.signature}`, '_blank')}>
-            Verify
+    <Modal onClose={onClose}>
+      <ShareContainer>
+        <h2>Share your {profit >= 0 ? 'win' : 'loss'}</h2>
+        <PayoutInfo>
+          <TokenValue amount={Math.abs(profit)} mint={event.data.tokenMint} />
+          {profit > 0 && <div>({multiplier.toFixed(2)}x)</div>}
+        </PayoutInfo>
+        <div>
+          <GambaUi.Button onClick={share}>
+            Share
           </GambaUi.Button>
-          <GambaUi.Button size="small" onClick={gotoGame}>
-            Play {game?.meta?.name}
-          </GambaUi.Button>
-        </Flex>
-      </Container>
+        </div>
+      </ShareContainer>
     </Modal>
   )
 }

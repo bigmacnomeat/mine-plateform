@@ -2,61 +2,43 @@ import { GameBundle } from 'gamba-react-ui-v2'
 import React from 'react'
 
 export const GAMES: GameBundle[] = [
-  // {
-  //   id: 'example',
-  //   meta: {
-  //     background: '#00ffe1',
-  //     name: 'Example',
-  //     image: '#',
-  //     description: '',
-  //   },
-  //   app: React.lazy(() => import('./ExampleGame')),
-  // },
   {
     id: 'dice',
     meta: {
-      background: '#ff6490',
-      name: 'Dice',
+      background: 'linear-gradient(135deg, #1a237e 0%, #0d47a1 100%)',
+      name: 'Crystal Dice',
       image: '/games/dice.png',
-      description: `
-        Dice challenges players to predict the outcome of a roll with a unique twist. Select a number and aim to roll below it to win. Adjusting your choice affects potential payouts, balancing risk and reward for an engaging experience.
-      `,
+      description: 'Roll the crystalline dice in this futuristic mining game. Predict the outcome and win valuable minerals. Higher risks yield rarer gems!',
     },
     app: React.lazy(() => import('./Dice')),
   },
   {
     id: 'slots',
     meta: {
-      background: '#5465ff',
-      name: 'Slots',
+      background: 'linear-gradient(135deg, #0277bd 0%, #039be5 100%)',
+      name: 'Quantum Slots',
       image: '/games/slots.png',
-      description: `
-        Slots is the quintessential game of luck and anticipation. Spin the reels and match symbols to win, with potential rewards displayed upfront. A fair and exciting game, Slots offers a classic casino experience tailored for digital enjoyment.
-      `,
+      description: 'Harness quantum energy in this next-gen slot machine. Match rare mineral patterns to unlock massive rewards from the space mines.',
     },
     app: React.lazy(() => import('./Slots')),
   },
   {
     id: 'flip',
     meta: {
-      name: 'Flip',
-      description: `
-        Flip offers a straightforward yet thrilling gamble: choose Heads or Tails and double your money or lose it all. This simple, high-stakes game tests your luck and decision-making with every flip of the coin.
-      `,
+      name: 'Binary Flip',
+      description: 'A cosmic coin toss where binary choices determine your destiny. Choose between matter and antimatter to double your mining yield!',
       image: '/games/flip.png',
-      background: '#ffe694',
+      background: 'linear-gradient(135deg, #ffd54f 0%, #ffb300 100%)',
     },
     app: React.lazy(() => import('./Flip')),
   },
   {
     id: 'hilo',
     meta: {
-      name: 'HiLo',
+      name: 'Mineral HiLo',
       image: '/games/hilo.png',
-      description: `
-        HiLo is a game of foresight and luck, challenging players to guess whether the next card will be higher or lower. Make consecutive correct guesses to increase your winnings, and decide when to cash out for maximum rewards.
-      `,
-      background: '#ff4f4f',
+      description: 'Navigate through mineral densities in this high-stakes mining operation. Predict higher or lower concentrations to maximize your extraction!',
+      background: 'linear-gradient(135deg, #d32f2f 0%, #c62828 100%)',
     },
     props: { logo: '/logo.svg' },
     app: React.lazy(() => import('./HiLo')),
@@ -64,62 +46,51 @@ export const GAMES: GameBundle[] = [
   {
     id: 'mines',
     meta: {
-      name: 'Mines',
-      description: `
-        There's money hidden beneath the squares. The reward will increase the more squares you reveal, but watch out for the 5 hidden mines. Touch one and you'll go broke. You can cash out at any time.
-      `,
+      name: 'Asteroid Mines',
+      description: 'Extract precious resources from a dangerous asteroid field. Each successful extraction increases your reward, but beware of volatile pockets!',
       image: '/games/mines.png',
-      background: '#8376ff',
+      background: 'linear-gradient(135deg, #512da8 0%, #673ab7 100%)',
     },
     app: React.lazy(() => import('./Mines')),
   },
   {
     id: 'roulette',
     meta: {
-      name: 'Roulette',
+      name: 'Plasma Roulette',
       image: '/games/roulette.png',
-      description: `
-        Roulette brings the classic wheel-spinning game to life with a digital twist. Bet on where the ball will land and watch as the wheel decides your fate. With straightforward rules and the chance for big wins, Roulette is a timeless game of chance.
-      `,
-      background: '#1de87e',
+      description: 'Experience the thrill of our plasma-powered roulette wheel. Place your bets on where the energy pulse will stabilize and win big!',
+      background: 'linear-gradient(135deg, #00695c 0%, #00897b 100%)',
     },
     app: React.lazy(() => import('./Roulette')),
   },
   {
     id: 'plinko',
     meta: {
-      background: '#7272ff',
+      background: 'linear-gradient(135deg, #303f9f 0%, #3949ab 100%)',
       image: '/games/plinko.png',
-      name: 'Plinko',
-      description: `
-        Plinko is played by dropping chips down a pegged board where they randomly fall into slots with varying win amounts. Each drop is a mix of anticipation and strategy, making Plinko an endlessly entertaining game of chance.
-        ⚠️ Under development. Results shown might be incorrect. ⚠️
-      `,
+      name: 'Gravity Plinko',
+      description: 'Drop energy cores through our quantum gravity field. Watch them navigate through crystalline pegs for potentially massive energy yields!',
     },
     app: React.lazy(() => import('./Plinko')),
   },
   {
     id: 'crash',
     meta: {
-      background: '#de95e8',
+      background: 'linear-gradient(135deg, #6a1b9a 0%, #7b1fa2 100%)',
       image: '/games/crash.png',
-      name: 'Crash',
-      description: `
-      Predict a multiplier target and watch a rocket attempt to reach it. If the rocket crashes before the target, the player loses; if it reaches or exceeds the target, the player wins.
-      `,
+      name: 'Quantum Crash',
+      description: 'Pilot your quantum mining probe to extract maximum resources. Time your extraction perfectly before the quantum field destabilizes!',
     },
     app: React.lazy(() => import('./CrashGame')),
   },
   {
     id: 'blackjack',
     meta: {
-      background: '#084700',
+      background: 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%)',
       image: '/games/blackjack.png',
-      name: 'BlackJack',
-      description: `
-        A simplified blackjack game where you and the dealer each get two cards. Win 2.5x your wager with a blackjack (21 with two cards), or 2x if your total beats the dealer's without exceeding 21. Ties or lower totals result in a loss. Enjoy quick gameplay without the usual complexities.
-      `,
+      name: 'Stellar Blackjack',
+      description: 'Coming Soon! Challenge the quantum dealer in this futuristic take on classic blackjack. Win up to 2.5x your wager by achieving perfect energy alignment (21)!',
     },
-    app: React.lazy(() => import('./BlackJack')),
+    app: React.lazy(() => import('./ExampleGame')),
   },
 ]

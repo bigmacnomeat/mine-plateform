@@ -5,13 +5,22 @@ import { GAMES } from '../../games'
 import { GameCard } from './GameCard'
 import { WelcomeBanner } from './WelcomeBanner'
 
+const SlideItem = styled.div`
+  width: 160px;
+  display: flex;
+`;
+
+const Title = styled.h2`
+  text-align: center;
+`;
+
 export function GameSlider() {
   return (
     <SlideSection>
       {GAMES.map((game) => (
-        <div key={game.id} style={{ width: '160px', display: 'flex' }}>
+        <SlideItem key={game.id}>
           <GameCard game={game} />
-        </div>
+        </SlideItem>
       ))}
     </SlideSection>
   )
@@ -46,7 +55,7 @@ export default function Dashboard() {
   return (
     <>
       <WelcomeBanner />
-      <h2 style={{ textAlign: 'center' }}>Games</h2>
+      <Title>Games</Title>
       <GameGrid />
     </>
   )

@@ -36,31 +36,18 @@ const skeletonAnimation = keyframes`
   }
 `
 
+const jackpotAnimation = keyframes`
+  0% { color: #FFD700; }
+  50% { color: #FFA500; }
+  100% { color: #FFD700; }
+`
+
 export const Container = styled.div`
   width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-`
-
-export const Profit = styled.div<{$win: boolean}>`
-  display: flex;
-  gap: .5em;
-  align-items: center;
-  background: ${props => props.$win ? '#00ff4021' : '#ffffff11'};
-  border-radius: 10px;
-  padding: 2px 5px;
-`
-
-export const Jackpot = styled.div`
-  animation: ${jackpotGradient} 1s linear 0s infinite;
-  display: flex;
-  gap: .5em;
-  align-items: center;
-  color: black;
-  border-radius: 10px;
-  padding: 1px 5px;
+  gap: 1em;
 `
 
 export const Recent = styled.button`
@@ -70,20 +57,64 @@ export const Recent = styled.button`
   align-items: center;
   gap: .5em;
   text-wrap: nowrap;
-  padding: 10px;
+  padding: 1em;
   color: unset;
   text-decoration: none;
   justify-content: space-between;
-  border-radius: 10px;
-  background: #0f121b;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+
   &:hover {
-    background: #131724;
+    background: rgba(255, 255, 255, 0.1);
   }
 `
 
 export const Skeleton = styled.div`
-  height: 40px;
-  width: 100%;
-  border-radius: 10px;
+  height: 4em;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
   animation: ${skeletonAnimation} 1s infinite;
+`
+
+export const Profit = styled.div<{ $win: boolean }>`
+  display: flex;
+  gap: .5em;
+  align-items: center;
+  background: ${props => props.$win ? '#00ff4021' : '#ffffff11'};
+  border-radius: 10px;
+  padding: 2px 5px;
+  color: ${(props) => props.$win ? '#4CAF50' : '#f44336'};
+`
+
+export const Jackpot = styled.div`
+  animation: ${jackpotAnimation} 1s infinite;
+  display: flex;
+  gap: .5em;
+  align-items: center;
+  color: black;
+  border-radius: 10px;
+  padding: 1px 5px;
+  font-weight: bold;
+`
+
+export const PlayInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: .5em;
+`
+
+export const GameImage = styled.img`
+  height: 1.5em;
+  width: 1.5em;
+  object-fit: contain;
+`
+
+export const TokenImage = styled.img`
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+`
+
+export const PlayerAddress = styled.div`
+  color: var(--gamba-ui-primary-color);
 `

@@ -1,84 +1,98 @@
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'
-import { GambaUi } from 'gamba-react-ui-v2'
-import { useTransactionError } from 'gamba-react-v2'
 import React from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import styled from 'styled-components'
 import { Modal } from './components/Modal'
-import { TOS_HTML } from './constants'
-import { useToast } from './hooks/useToast'
+import { TERMS_OF_SERVICE } from './constants'
 import { useUserStore } from './hooks/useUserStore'
+import Header from './sections/Header/index'
 import Dashboard from './sections/Dashboard/Dashboard'
 import Game from './sections/Game/Game'
-import Header from './sections/Header'
 import RecentPlays from './sections/RecentPlays/RecentPlays'
-import Toasts from './sections/Toasts'
-import { MainWrapper, TosInner, TosWrapper } from './styles'
 
-function ScrollToTop() {
-  const { pathname } = useLocation()
-  React.useEffect(() => window.scrollTo(0, 0), [pathname])
-  return null
-}
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: rgba(17, 17, 17, 0.8);
+  color: white;
+  position: relative;
+  z-index: 1;
+`
 
-function ErrorHandler() {
-  const walletModal = useWalletModal()
-  const toast = useToast()
-  const [error, setError] = React.useState<Error>()
+const MainContent = styled.main`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+`
 
-  useTransactionError(
-    (error) => {
-      if (error.message === 'NOT_CONNECTED') {
-        walletModal.setVisible(true)
-        return
-      }
-      toast({ title: '❌ Transaction error', description: error.error?.errorMessage ?? error.message })
-    },
-  )
+const WelcomeContent = styled.div`
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 8px;
+  position: relative;
+  z-index: 3;
+`
 
-  return (
-    <>
-      {error && (
-        <Modal onClose={() => setError(undefined)}>
-          <h1>Error occured</h1>
-          <p>{error.message}</p>
-        </Modal>
-      )}
-    </>
-  )
-}
+const RecentPlaysTitle = styled.h2`
+  text-align: center;
+  margin: 20px 0;
+  color: white;
+`
 
-export default function App() {
-  const newcomer = useUserStore((state) => state.newcomer)
-  const set = useUserStore((state) => state.set)
+const AcceptButton = styled.button`
+  background: #03ffa4;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+`
+
+function App() {
+  const { newcomer, set } = useUserStore()
 
   return (
     <>
       {newcomer && (
-        <Modal>
-          <h1>Welcome</h1>
-          <TosWrapper>
-            <TosInner dangerouslySetInnerHTML={{ __html: TOS_HTML }} />
-          </TosWrapper>
-          <p>
-            By playing on our platform, you confirm your compliance.
-          </p>
-          <GambaUi.Button main onClick={() => set({ newcomer: false })}>
-            Acknowledge
-          </GambaUi.Button>
+        <Modal onClose={() => set({ newcomer: false })}>
+          <h1>Welcome to Mine Vegas</h1>
+          <WelcomeContent>
+            <div dangerouslySetInnerHTML={{ __html: TERMS_OF_SERVICE }} />
+          </WelcomeContent>
+          <AcceptButton onClick={() => set({ newcomer: false })}>
+            Accept & Continue
+          </AcceptButton>
         </Modal>
       )}
-      <ScrollToTop />
-      <ErrorHandler />
-      <Header />
-      <Toasts />
-      <MainWrapper>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/:gameId" element={<Game />} />
-        </Routes>
-        <h2 style={{ textAlign: 'center' }}>Recent Plays</h2>
-        <RecentPlays />
-      </MainWrapper>
+      <AppWrapper>
+        <Header />
+        <MainContent>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/:gameId" element={<Game />} />
+          </Routes>
+          <RecentPlaysTitle>Recent Plays</RecentPlaysTitle>
+          <RecentPlays />
+        </MainContent>
+      </AppWrapper>
     </>
   )
 }
+
+export default App

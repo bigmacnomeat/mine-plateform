@@ -1,28 +1,39 @@
 import { PublicKey } from '@solana/web3.js'
 import { FAKE_TOKEN_MINT, PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
 
-// Get RPC from the .env file or default to the public RPC.
-export const RPC_ENDPOINT = import.meta.env.VITE_RPC_ENDPOINT ?? 'https://api.mainnet-beta.solana.com'
+// Platform configuration
+if (!import.meta.env.VITE_PLATFORM_CREATOR_ADDRESS) {
+  throw new Error('VITE_PLATFORM_CREATOR_ADDRESS is required in .env')
+}
 
-// Solana address that will receive fees when somebody plays on this platform
-export const PLATFORM_CREATOR_ADDRESS = new PublicKey(
-  'H9Z1NMsAXZBTgB6qWJKuXX8RoLjy7H1RNZ6xcackdLdf',
-)
+// Platform creator address
+export const PLATFORM_CREATOR_ADDRESS = new PublicKey(import.meta.env.VITE_PLATFORM_CREATOR_ADDRESS)
 
-// Gamba explorer URL - Appears in RecentPlays
-export const EXPLORER_URL = 'https://explorer.gamba.so'
+// Platform fees
+export const PLATFORM_CREATOR_FEE = Number(import.meta.env.VITE_PLATFORM_CREATOR_FEE ?? 0.01)
+export const PLATFORM_JACKPOT_FEE = Number(import.meta.env.VITE_PLATFORM_JACKPOT_FEE ?? 0.001)
+export const PLATFORM_REFERRAL_FEE = Number(import.meta.env.VITE_PLATFORM_REFERRAL_FEE ?? 0.5)
 
-// Platform URL - Appears in ShareModal
-export const PLATFORM_SHARABLE_URL = 'play.gamba.so'
+// Platform URLs
+if (!import.meta.env.VITE_PLATFORM_SHARABLE_URL) {
+  throw new Error('VITE_PLATFORM_SHARABLE_URL is required in .env')
+}
 
-// Creator fee (in %)
-export const PLATFORM_CREATOR_FEE = 0.01 // 1% !!max 5%!!
+export const PLATFORM_SHARABLE_URL = import.meta.env.VITE_PLATFORM_SHARABLE_URL
 
-// Jackpot fee (in %)
-export const PLATFORM_JACKPOT_FEE = 0.001 // 0.1%
+// RPC endpoint
+if (!import.meta.env.VITE_RPC_ENDPOINT) {
+  throw new Error('VITE_RPC_ENDPOINT is required in .env')
+}
 
-// Referral fee (in %)
-export const PLATFORM_REFERRAL_FEE = 0.5 // 0.25%
+export const RPC_ENDPOINT = import.meta.env.VITE_RPC_ENDPOINT
+
+// Firebase
+if (!import.meta.env.VITE_FIREBASE_DATABASE_URL) {
+  throw new Error('VITE_FIREBASE_DATABASE_URL is required in .env')
+}
+
+export const FIREBASE_DATABASE_URL = import.meta.env.VITE_FIREBASE_DATABASE_URL
 
 /** If the user should be able to revoke an invite after they've accepted an invite */
 export const PLATFORM_ALLOW_REFERRER_REMOVAL = true
@@ -35,8 +46,6 @@ const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): 
 
 /**
  * List of pools supported by this platform
- * Make sure the token you want to list has a corresponding pool on https://explorer.gamba.so/pools
- * For private pools, add the creator of the Liquidity Pool as a second argument
  */
 export const POOLS = [
   // Fake token:
@@ -51,14 +60,13 @@ export const POOLS = [
   lp('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'), // MINE token
 ]
 
-// The default token to be selected
+// The default pool to be selected
 export const DEFAULT_POOL = POOLS[0]
 
 /**
  * List of token metadata for the supported tokens
- * Alternatively, we can provide a fetcher method to automatically fetch metdata. See TOKEN_METADATA_FETCHER below.
  */
-export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = [
+export const TOKEN_METADATA: TokenMeta[] = [
   {
     mint: FAKE_TOKEN_MINT,
     name: 'Fake',
@@ -66,51 +74,58 @@ export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = [
     image: '/fakemoney.png',
     baseWager: 1e9,
     decimals: 9,
-    usdPrice: 0,
+  },
+  {
+    mint: new PublicKey('So11111111111111111111111111111111111111112'),
+    name: 'Solana',
+    symbol: 'SOL',
+    decimals: 9,
+    image: '/sol.png',
+    baseWager: 1e9,
+  },
+  {
+    mint: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+    name: 'USD Coin',
+    symbol: 'USDC',
+    decimals: 6,
+    image: '/usdc.png',
+    baseWager: 1e6,
   },
   {
     mint: new PublicKey('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
-    name: 'W',
+    name: 'Wormhole',
     symbol: 'Wormhole',
+    decimals: 6,
     image: 'https://wormhole.com/token.png',
     baseWager: 1e6,
-    decimals: 6,
-    usdPrice: 0,
   },
   {
     mint: new PublicKey('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'),
-    name: 'MINE',
+    name: 'Mine Token',
     symbol: 'MINE',
-    image: 'mine.png', 
-    baseWager: 1e6, // Set base wager as needed
-    decimals: 6, // Set decimals as needed
-    usdPrice: 0, // Set the initial USD price as needed
+    decimals: 6,
+    image: 'mine.png',
+    baseWager: 1e6,
   },
 ]
 
-/** HTML to display to user that they need to accept in order to continue */
-export const TOS_HTML = `
-  <p><b>1. Age Requirement:</b> Must be at least 18 years old.</p>
-  <p><b>2. Legal Compliance:</b> Follow local laws responsibly.</p>
-  <p><b>3. Risk Acknowledgement:</b> Games involve risk; no guaranteed winnings.</p>
-  <p><b>4. No Warranty:</b> Games provided "as is"; operate randomly.</p>
-  <p><b>5. Limitation of Liability:</b> We're not liable for damages.</p>
-  <p><b>6. Fair Play:</b> Games are conducted fairly and transparently.</p>
-  <p><b>7. Data Privacy:</b> Your privacy is important to us.</p>
+// Terms of service
+export const TERMS_OF_SERVICE = `
+  <p><b>1. Age Restriction:</b> Must be 18+ to play.</p>
+  <p><b>2. Compliance:</b> Follow all local laws and regulations.</p>
+  <p><b>3. Fairness:</b> Games use verifiable randomness.</p>
+  <p><b>4. Risk:</b> Only play with what you can afford to lose.</p>
+  <p><b>5. Privacy:</b> Your data is protected and secure.</p>
+  <p><b>6. Fees:</b> Platform fees are transparent and fair.</p>
+  <p><b>7. Support:</b> Contact us for any issues.</p>
   <p><b>8. Responsible Gaming:</b> Play responsibly; seek help if needed.</p>
 `
 
-/**
- * A method for automatically fetching Token Metadata.
- * Here we create a fetcher that uses Helius metadata API, if an API key exists as an environment variable.
- */
-export const TOKEN_METADATA_FETCHER = (
-  () => {
-    if (import.meta.env.VITE_HELIUS_API_KEY) {
-      return makeHeliusTokenFetcher(
-        import.meta.env.VITE_HELIUS_API_KEY,
-        { dollarBaseWager: 1 },
-      )
+// The default token metadata fetcher
+export const TOKEN_METADATA_FETCHER = () => {
+  return {
+    fetchTokenMetadata: async () => {
+      return TOKEN_METADATA
     }
   }
-)()
+}

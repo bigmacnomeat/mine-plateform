@@ -1,12 +1,22 @@
 import { BPS_PER_WHOLE, GambaTransaction } from 'gamba-core-v2'
 import { GambaUi, TokenValue, useTokenMeta } from 'gamba-react-ui-v2'
 import React from 'react'
-import { EXPLORER_URL, PLATFORM_CREATOR_ADDRESS } from '../../constants'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { extractMetadata } from '../../utils'
-import { Container, Jackpot, Profit, Recent, Skeleton } from './RecentPlays.styles'
+import { 
+  Container, 
+  Jackpot, 
+  Profit, 
+  Recent, 
+  Skeleton,
+  PlayInfo,
+  GameImage,
+  TokenImage,
+  PlayerAddress 
+} from './RecentPlays.styles'
 import { ShareModal } from './ShareModal'
 import { useRecentPlays } from './useRecentPlays'
+import { useNavigate } from 'react-router-dom'
 
 function TimeDiff({ time, suffix = 'ago' }: {time: number, suffix?: string}) {
   const diff = (Date.now() - time)
@@ -35,18 +45,17 @@ function RecentPlay({ event }: {event: GambaTransaction<'GameSettled'>}) {
   const profit = payout - wager
 
   const { game } = extractMetadata(event)
+  const userAddress = data.user.toBase58()
+  const shortAddress = `${userAddress.substring(0, 4)}...`
 
   return (
-    <>
-      <img src={game?.meta.image} style={{ height: '1.5em' }} />
-      <div style={{ color: 'var(--gamba-ui-primary-color)' }}>
-        {data.user.toBase58().substring(0, 4)}...
-      </div>
+    <PlayInfo>
+      <GameImage src={game?.meta.image} alt={`${game?.meta.name || 'Game'} icon`} />
+      <PlayerAddress>{shortAddress}</PlayerAddress>
       {md && (profit >= 0 ? ' won ' : ' lost ')}
       <Profit $win={profit > 0}>
-        <img src={token.image} height="20px" style={{ borderRadius: '50%' }} />
+        <TokenImage src={token.image} alt={`${token.symbol} token`} />
         <TokenValue amount={Math.abs(profit)} mint={data.tokenMint} />
-        {/* {(token.usdPrice * profit / (10 ** token.decimals)).toLocaleString()} USD */}
       </Profit>
 
       {md && (
@@ -63,7 +72,7 @@ function RecentPlay({ event }: {event: GambaTransaction<'GameSettled'>}) {
           )}
         </>
       )}
-    </>
+    </PlayInfo>
   )
 }
 
@@ -71,6 +80,7 @@ export default function RecentPlays() {
   const events = useRecentPlays({ showAllPlatforms: false })
   const [selectedGame, setSelectedGame] = React.useState<GambaTransaction<'GameSettled'>>()
   const md = useMediaQuery('md')
+  const navigate = useNavigate()
 
   return (
     <Container>
@@ -83,15 +93,13 @@ export default function RecentPlays() {
       {events.map(
         (tx) => (
           <Recent key={tx.signature} onClick={() => setSelectedGame(tx)}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '.5em' }}>
-              <RecentPlay event={tx} />
-            </div>
+            <RecentPlay event={tx} />
             <TimeDiff time={tx.time} suffix={md ? 'ago' : ''} />
           </Recent>
         ),
       )}
-      <GambaUi.Button main onClick={() => window.open(`${EXPLORER_URL}/platform/${PLATFORM_CREATOR_ADDRESS.toString()}`)}>
-        🚀 Explorer
+      <GambaUi.Button main onClick={() => navigate('/explorer')}>
+        ⛏️ Mine Stats
       </GambaUi.Button>
     </Container>
   )

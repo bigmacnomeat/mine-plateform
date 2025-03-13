@@ -26,7 +26,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  z-index: 100;
+  z-index: 7;
   max-width: min(100%, 460px);
   border-radius: 10px;
   background: #15151f;
@@ -50,7 +50,7 @@ const StyledModal = styled.div`
   bottom: 0;
   transition: opacity linear 150ms;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
+  z-index: 6;
   overflow-y: auto;
   height: 100vh;
   animation: appear .3s;
@@ -73,7 +73,7 @@ const StyledModal = styled.div`
     right: 10px;
     top: 10px;
     border: none;
-    z-index: 11;
+    z-index: 8;
     opacity: .75;
     transition: opacity .2s, background .2s;
     background: transparent;
@@ -112,8 +112,13 @@ export function Modal({ children, onClose }: Props) {
       <Container>
         <Wrapper ref={ref}>
           {onClose && (
-            <button className="close" onClick={onClose}>
-              <Icon.Close2 />
+            <button 
+              className="close" 
+              onClick={onClose}
+              title="Close modal"
+              aria-label="Close modal"
+            >
+              <Icon.Close />
             </button>
           )}
           {children}

@@ -3,6 +3,7 @@ import { useGambaEventListener, useGambaEvents, useWalletAddress } from 'gamba-r
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { PLATFORM_CREATOR_ADDRESS } from '../../constants'
+import { updateGameStats } from '../../utils/gameTracker'
 
 interface Params {
   showAllPlatforms?: boolean
@@ -27,6 +28,12 @@ export function useRecentPlays(params: Params = {}) {
     (event) => {
       // Ignore events that occured on another platform
       if (!showAllPlatforms && !event.data.creator.equals(PLATFORM_CREATOR_ADDRESS)) return
+      
+      // Update Firebase stats when user wins
+      if (event.data.payout > 0) {
+        updateGameStats(event.data.user, event.data.payout)
+      }
+      
       // Set a delay on games with suspenseful reveal
       const delay = event.data.user.equals(userAddress) && ['plinko', 'slots'].some((x) => location.pathname.includes(x)) ? 3000 : 1
       setTimeout(
