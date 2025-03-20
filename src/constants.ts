@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { FAKE_TOKEN_MINT, PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
+import { PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
 
 // Platform configuration
 const PLATFORM_CREATOR_ADDRESS_ENV = import.meta.env.VITE_PLATFORM_CREATOR_ADDRESS || process.env.VITE_PLATFORM_CREATOR_ADDRESS
@@ -40,14 +40,13 @@ const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): 
  * List of pools supported by this platform
  */
 export const POOLS = [
-  lp(FAKE_TOKEN_MINT),
-  lp('So11111111111111111111111111111111111111112'),
-  lp('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-  lp('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
-  lp('H8cstTfTxPEm5qP3UXgga8Bdzm2MCDGAghJTgovPy6Y1', 'H83nsJJe11WY7TjhiVoDq5xmiYs7rU2iY4FweJuahVz2'),
-  lp('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'), // MINE token
+  lp('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'), // MINE token (default)
+  lp('So11111111111111111111111111111111111111112'), // SOL
+  lp('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), // USDC
+  lp('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'), // Additional token
+  lp('H8cstTfTxPEm5qP3UXgga8Bdzm2MCDGAghJTgovPy6Y1', 'H83nsJJe11WY7TjhiVoDq5xmiYs7rU2iY4FweJuahVz2'), // Another token pair
   lp('CLmpi9DKXHjRo5HmFsTnSkaPGSKPokEmJy3Xgtg1QZNZ', 'H9Z1NMsAXZBTgB6qWJKuXX8RoLjy7H1RNZ6xcackdLdf'), // LP Token
-  lp('CyAKj2XFMq6aikXVvX1B7wHjvffx7hq8af8dpeFdHmYh', 'GqdYp5VHnph8ZTKM2zykzb6xKNR91VkuznxASVnVhmo4'), // Bonus Token
+  lp('CyAKj2XFMq6aikXVvX1B7wHjvffx7hq8af8dpeFdHmYh', 'GqdYp5VHnph8ZTKM2zykzb6xKNR91VkuznxASVnVhmo4')  // Bonus Token
 ]
 
 // The default pool to be selected
@@ -58,12 +57,12 @@ export const DEFAULT_POOL = POOLS[0]
  */
 export const TOKEN_METADATA: TokenMeta[] = [
   {
-    mint: FAKE_TOKEN_MINT,
-    name: 'Fake',
-    symbol: 'FAKE',
-    image: '/fakemoney.png',
-    baseWager: 1e9,
-    decimals: 9,
+    mint: new PublicKey('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'),
+    name: 'Mine Token',
+    symbol: 'MINE',
+    decimals: 6,
+    image: 'mine.png',
+    baseWager: 1e6,
   },
   {
     mint: new PublicKey('So11111111111111111111111111111111111111112'),
@@ -79,14 +78,6 @@ export const TOKEN_METADATA: TokenMeta[] = [
     symbol: 'USDC',
     decimals: 6,
     image: '/usdc.png',
-    baseWager: 1e6,
-  },
-  {
-    mint: new PublicKey('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'),
-    name: 'Mine Token',
-    symbol: 'MINE',
-    decimals: 6,
-    image: 'mine.png',
     baseWager: 1e6,
   },
   {
