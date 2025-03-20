@@ -21,7 +21,7 @@ export const PLATFORM_SHARABLE_URL = PLATFORM_SHARABLE_URL_ENV || "https://mine-
 
 // RPC endpoint - default to devnet
 const RPC_ENDPOINT_ENV = import.meta.env.VITE_RPC_ENDPOINT || process.env.VITE_RPC_ENDPOINT
-export const RPC_ENDPOINT = RPC_ENDPOINT_ENV || "https://api.devnet.solana.com"
+export const RPC_ENDPOINT = RPC_ENDPOINT_ENV || "https://mainnet.helius-rpc.com/?api-key=359013a5-2357-45ae-98f5-4b218037fb58"
 
 // Firebase - make optional
 const FIREBASE_DATABASE_URL_ENV = import.meta.env.VITE_FIREBASE_DATABASE_URL || process.env.VITE_FIREBASE_DATABASE_URL
