@@ -40,16 +40,14 @@ const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): 
  * List of pools supported by this platform
  */
 export const POOLS = [
-  // Fake token:
   lp(FAKE_TOKEN_MINT),
-  // SOL:
   lp('So11111111111111111111111111111111111111112'),
-  // USDC:
   lp('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-  // Wormhole:
   lp('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
   lp('H8cstTfTxPEm5qP3UXgga8Bdzm2MCDGAghJTgovPy6Y1', 'H83nsJJe11WY7TjhiVoDq5xmiYs7rU2iY4FweJuahVz2'),
   lp('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'), // MINE token
+  lp('CLmpi9DKXHjRo5HmFsTnSkaPGSKPokEmJy3Xgtg1QZNZ', 'H9Z1NMsAXZBTgB6qWJKuXX8RoLjy7H1RNZ6xcackdLdf'), // LP Token
+  lp('CyAKj2XFMq6aikXVvX1B7wHjvffx7hq8af8dpeFdHmYh', 'GqdYp5VHnph8ZTKM2zykzb6xKNR91VkuznxASVnVhmo4'), // Bonus Token
 ]
 
 // The default pool to be selected
@@ -84,19 +82,27 @@ export const TOKEN_METADATA: TokenMeta[] = [
     baseWager: 1e6,
   },
   {
-    mint: new PublicKey('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
-    name: 'Wormhole',
-    symbol: 'Wormhole',
-    decimals: 6,
-    image: 'https://wormhole.com/token.png',
-    baseWager: 1e6,
-  },
-  {
     mint: new PublicKey('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'),
     name: 'Mine Token',
     symbol: 'MINE',
     decimals: 6,
     image: 'mine.png',
+    baseWager: 1e6,
+  },
+  {
+    mint: new PublicKey('CLmpi9DKXHjRo5HmFsTnSkaPGSKPokEmJy3Xgtg1QZNZ'),
+    name: 'LP Token',
+    symbol: 'LP',
+    decimals: 6,
+    image: 'lp.png',
+    baseWager: 1e6,
+  },
+  {
+    mint: new PublicKey('CyAKj2XFMq6aikXVvX1B7wHjvffx7hq8af8dpeFdHmYh'),
+    name: 'Bonus Token',
+    symbol: 'BONUS',
+    decimals: 6,
+    image: 'bonus.png',
     baseWager: 1e6,
   },
 ]
