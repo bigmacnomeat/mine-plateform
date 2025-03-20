@@ -15,7 +15,7 @@ const SIDES = {
   heads: [2, 0],
   tails: [0, 2],
 }
-const WAGER_OPTIONS = [0.1, 0.5, 1, 2, 5]  // Reduced wager amounts for testing
+const WAGER_OPTIONS = [100, 500, 1500, 10000, 50000]  // Reduced wager amounts for testing
 
 type Side = keyof typeof SIDES
 
