@@ -218,7 +218,7 @@ export function WelcomeBanner() {
         <button onClick={() => window.open('https://jup.ag/swap/SOL-GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh', '_blank')}>
           Buy $MINE
         </button>
-        <button onClick={() => window.open('https://discord.gg/HSTtFFwR', '_blank')}>
+        <button onClick={() => window.open('https://discord.gg/zsZcPCk6Ha', '_blank')}>
           💬 Discord
         </button>
       </Buttons>
