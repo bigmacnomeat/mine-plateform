@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
+import { FAKE_TOKEN_MINT, PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
 
 // Platform configuration
 const PLATFORM_CREATOR_ADDRESS_ENV = import.meta.env.VITE_PLATFORM_CREATOR_ADDRESS || process.env.VITE_PLATFORM_CREATOR_ADDRESS
@@ -8,20 +8,20 @@ if (!PLATFORM_CREATOR_ADDRESS_ENV) {
 }
 
 // Platform creator address - default to a test address if not set
-export const PLATFORM_CREATOR_ADDRESS = new PublicKey("H9Z1NMsAXZBTgB6qWJKuXX8RoLjy7H1RNZ6xcackdLdf")
+export const PLATFORM_CREATOR_ADDRESS = new PublicKey(PLATFORM_CREATOR_ADDRESS_ENV || "H9Z1NMsAXZBTgB6qWJKuXX8RoLjy7H1RNZ6xcackdLdf")
 
 // Platform fees with defaults
-export const PLATFORM_CREATOR_FEE = Number(import.meta.env.VITE_PLATFORM_CREATOR_FEE ?? 0.01)
-export const PLATFORM_JACKPOT_FEE = Number(import.meta.env.VITE_PLATFORM_JACKPOT_FEE ?? 0.001)
-export const PLATFORM_REFERRAL_FEE = Number(import.meta.env.VITE_PLATFORM_REFERRAL_FEE ?? 0.5)
+export const PLATFORM_CREATOR_FEE = Number(import.meta.env.VITE_PLATFORM_CREATOR_FEE ?? 0.03)
+export const PLATFORM_JACKPOT_FEE = Number(import.meta.env.VITE_PLATFORM_JACKPOT_FEE ?? 0.005)
+export const PLATFORM_REFERRAL_FEE = Number(import.meta.env.VITE_PLATFORM_REFERRAL_FEE ?? 0.001)
 
 // Platform URLs
 const PLATFORM_SHARABLE_URL_ENV = import.meta.env.VITE_PLATFORM_SHARABLE_URL || process.env.VITE_PLATFORM_SHARABLE_URL
 export const PLATFORM_SHARABLE_URL = PLATFORM_SHARABLE_URL_ENV || "https://mine-plateform.vercel.app"
 
-// RPC endpoint - default to devnet
+// RPC endpoint - default to Mainnet-beta
 const RPC_ENDPOINT_ENV = import.meta.env.VITE_RPC_ENDPOINT || process.env.VITE_RPC_ENDPOINT
-export const RPC_ENDPOINT = RPC_ENDPOINT_ENV || "https://mainnet.helius-rpc.com/?api-key=359013a5-2357-45ae-98f5-4b218037fb58"
+export const RPC_ENDPOINT = RPC_ENDPOINT_ENV || "https://api.mainnet-beta.solana.com"
 
 // Firebase - make optional
 const FIREBASE_DATABASE_URL_ENV = import.meta.env.VITE_FIREBASE_DATABASE_URL || process.env.VITE_FIREBASE_DATABASE_URL
@@ -40,29 +40,37 @@ const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): 
  * List of pools supported by this platform
  */
 export const POOLS = [
-  lp('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'), // MINE token (default)
-  lp('So11111111111111111111111111111111111111112'), // SOL
-  lp('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), // USDC
-  lp('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'), // Additional token
-  lp('H8cstTfTxPEm5qP3UXgga8Bdzm2MCDGAghJTgovPy6Y1', 'H83nsJJe11WY7TjhiVoDq5xmiYs7rU2iY4FweJuahVz2'), // Another token pair
-  lp('CLmpi9DKXHjRo5HmFsTnSkaPGSKPokEmJy3Xgtg1QZNZ', 'H9Z1NMsAXZBTgB6qWJKuXX8RoLjy7H1RNZ6xcackdLdf'), // LP Token
-  lp('CyAKj2XFMq6aikXVvX1B7wHjvffx7hq8af8dpeFdHmYh', 'GqdYp5VHnph8ZTKM2zykzb6xKNR91VkuznxASVnVhmo4')  // Bonus Token
+  // MINE token pool with specific configuration
+  {
+    token: new PublicKey('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'),
+    authority: new PublicKey('H9Z1NMsAXZBTgB6qWJKuXX8RoLjy7H1RNZ6xcackdLdf'),
+    lpToken: new PublicKey('CLmpi9DKXHjRo5HmFsTnSkaPGSKPokEmJy3Xgtg1QZNZ'),
+    bonusToken: new PublicKey('CyAKj2XFMq6aikXVvX1B7wHjvffx7hq8af8dpeFdHmYh'),
+    poolAddress: new PublicKey('GqdYp5VHnph8ZTKM2zykzb6xKNR91VkuznxASVnVhmo4'),
+  },
+  // SOL:
+  lp('So11111111111111111111111111111111111111112'),
+  // USDC:
+  lp('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+  // Wormhole:
+  lp('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
+  lp('H8cstTfTxPEm5qP3UXgga8Bdzm2MCDGAghJTgovPy6Y1', 'H83nsJJe11WY7TjhiVoDq5xmiYs7rU2iY4FweJuahVz2'),
 ]
 
 // The default pool to be selected
-export const DEFAULT_POOL = POOLS[0]
+export const DEFAULT_POOL = POOLS[0] // MINE token pool
 
 /**
  * List of token metadata for the supported tokens
  */
 export const TOKEN_METADATA: TokenMeta[] = [
   {
-    mint: new PublicKey('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'),
-    name: 'Mine Token',
-    symbol: 'MINE',
-    decimals: 6,
-    image: 'mine.png',
-    baseWager: 1e6,
+    mint: FAKE_TOKEN_MINT,
+    name: 'Fake',
+    symbol: 'FAKE',
+    image: '/fakemoney.png',
+    baseWager: 1e9,
+    decimals: 9,
   },
   {
     mint: new PublicKey('So11111111111111111111111111111111111111112'),
@@ -81,19 +89,19 @@ export const TOKEN_METADATA: TokenMeta[] = [
     baseWager: 1e6,
   },
   {
-    mint: new PublicKey('CLmpi9DKXHjRo5HmFsTnSkaPGSKPokEmJy3Xgtg1QZNZ'),
-    name: 'LP Token',
-    symbol: 'LP',
+    mint: new PublicKey('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
+    name: 'Wormhole',
+    symbol: 'Wormhole',
     decimals: 6,
-    image: 'lp.png',
+    image: 'https://wormhole.com/token.png',
     baseWager: 1e6,
   },
   {
-    mint: new PublicKey('CyAKj2XFMq6aikXVvX1B7wHjvffx7hq8af8dpeFdHmYh'),
-    name: 'Bonus Token',
-    symbol: 'BONUS',
+    mint: new PublicKey('GaHu73uhhWrcGLF3CWUi26ZBzv5mZAy8PLrvzoM5XMZh'),
+    name: 'Mine Token',
+    symbol: 'MINE',
     decimals: 6,
-    image: 'bonus.png',
+    image: 'mine.png',
     baseWager: 1e6,
   },
 ]
