@@ -8,7 +8,7 @@ if (!PLATFORM_CREATOR_ADDRESS_ENV) {
 }
 
 // Platform creator address - default to a test address if not set
-export const PLATFORM_CREATOR_ADDRESS = new PublicKey(PLATFORM_CREATOR_ADDRESS_ENV || "11111111111111111111111111111111")
+export const PLATFORM_CREATOR_ADDRESS = new PublicKey("H9Z1NMsAXZBTgB6qWJKuXX8RoLjy7H1RNZ6xcackdLdf")
 
 // Platform fees with defaults
 export const PLATFORM_CREATOR_FEE = Number(import.meta.env.VITE_PLATFORM_CREATOR_FEE ?? 0.01)
